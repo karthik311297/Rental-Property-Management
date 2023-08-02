@@ -10,8 +10,8 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     
-    <groupId>org.rental</groupId>
-    <artifactId>RentalProperty</artifactId>
+    <groupId>rental-app</groupId>
+    <artifactId>rentalproperty</artifactId>
     <version>1.0.0</version>
     <name>RentalProperty</name>
     <description>Rental Property Application</description>
@@ -45,6 +45,16 @@
             <artifactId>testng</artifactId>
             <version>${testng.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
     
@@ -86,7 +96,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>org.rental.RentalApplication</mainClass>
+                    <mainClass>com.rental.RentalApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>
