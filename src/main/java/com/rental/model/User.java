@@ -1,5 +1,6 @@
 package com.rental.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -30,6 +31,9 @@ public class User
     
     @Column(nullable = false, length = 13)
     private String phoneNumber;
+    
+    @Column(nullable = false)
+    private ROLE role;
     
     public User()
     {
@@ -84,6 +88,16 @@ public class User
     public void setPhoneNumber(String phoneNumber)
     {
         this.phoneNumber = phoneNumber;
+    }
+    
+    public ROLE getRole()
+    {
+        return role;
+    }
+    
+    public void setRole(ROLE role)
+    {
+        this.role = role;
     }
     
     @Override
