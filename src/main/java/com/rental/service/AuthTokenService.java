@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.rental.exception.AuthenticatedSessionAlreadyExistsException;
 import com.rental.model.AuthToken;
 import com.rental.model.UserInfo;
 import com.rental.repository.AuthTokenRepository;
