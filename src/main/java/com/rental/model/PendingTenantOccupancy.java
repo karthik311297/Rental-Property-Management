@@ -12,31 +12,31 @@ import javax.persistence.Table;
 import com.rental.model.identifier.OccupancyIdentifier;
 
 @Entity
-@Table(name = "RentOccupancyKYC")
+@Table(name = "PendingTenantOccupancy")
 @IdClass(OccupancyIdentifier.class)
-public class RentOccupancyKYC
+public class PendingTenantOccupancy
 {
     @Id
     @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @JoinColumn(name = "UserID")
-    private User tenant;
+    private UserInfo tenant;
     
     @Id
     @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @JoinColumn(name = "PropertyID")
     private Property property;
     
-    public RentOccupancyKYC()
+    public PendingTenantOccupancy()
     {
     
     }
     
-    public User getTenant()
+    public UserInfo getTenant()
     {
         return tenant;
     }
     
-    public void setTenant(User tenant)
+    public void setTenant(UserInfo tenant)
     {
         this.tenant = tenant;
     }

@@ -4,11 +4,11 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import com.rental.model.Property;
-import com.rental.model.User;
+import com.rental.model.UserInfo;
 
 public class OccupancyIdentifier implements Serializable
 {
-    private User tenant;
+    private UserInfo tenant;
     
     private Property property;
     
@@ -17,7 +17,7 @@ public class OccupancyIdentifier implements Serializable
     
     }
     
-    public OccupancyIdentifier(User tenant, Property property)
+    public OccupancyIdentifier(UserInfo tenant, Property property)
     {
         this.tenant = tenant;
         this.property = property;

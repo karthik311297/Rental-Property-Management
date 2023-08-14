@@ -35,7 +35,7 @@ public class Property
     
     @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @JoinColumn(name = "UserID")
-    private User owner;
+    private UserInfo owner;
     
     public Property()
     {
@@ -92,12 +92,12 @@ public class Property
         this.rent = rent;
     }
     
-    public User getOwner()
+    public UserInfo getOwner()
     {
         return owner;
     }
     
-    public void setOwner(User owner)
+    public void setOwner(UserInfo owner)
     {
         this.owner = owner;
     }

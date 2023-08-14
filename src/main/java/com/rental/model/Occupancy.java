@@ -22,7 +22,7 @@ public class Occupancy
     @Id
     @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @JoinColumn(name = "UserID")
-    private User tenant;
+    private UserInfo tenant;
     
     @Id
     @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
@@ -37,12 +37,12 @@ public class Occupancy
     
     }
     
-    public User getTenant()
+    public UserInfo getTenant()
     {
         return tenant;
     }
     
-    public void setTenant(User tenant)
+    public void setTenant(UserInfo tenant)
     {
         this.tenant = tenant;
     }
