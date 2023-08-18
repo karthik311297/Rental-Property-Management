@@ -1,6 +1,8 @@
 package com.rental.service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +37,16 @@ public class AuthTokenService
         }
     }
     
+    public int updateTokenExpiryDate(LocalDateTime newExpiryDate, String tokenID)
+    {
+        return authTokenRepository.updateTokenExpiryDate(newExpiryDate, UUID.fromString(tokenID));
+    }
+    
+    public Optional<AuthToken> findByAuthTokenById(String tokenID)
+    {
+        return authTokenRepository.findById(UUID.fromString(tokenID));
+    }
+    
     private String getAuthenticatedUserToken(UserInfo userInfo) throws AuthenticatedSessionAlreadyExistsException
     {
         AuthToken token;
@@ -48,11 +60,6 @@ public class AuthTokenService
         }
         return token.getId().toString();
     }
-    
-//    private boolean isTokenExpired(AuthToken authToken)
-//    {
-//        return Duration.between(LocalDateTime.now(), authToken.getExpiryDate()).toMinutes() > getAuthTokenExpiryTimeInMinutes();
-//    }
     
     private AuthToken getFreshAuthToken(UserInfo userInfo)
     {

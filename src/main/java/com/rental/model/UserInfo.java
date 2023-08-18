@@ -16,7 +16,7 @@ public class UserInfo
 {
     @Id
     @GeneratedValue
-    @Column(name = "UserID")
+    @Column(name = "UserID", columnDefinition = "uuid")
     private UUID id;
     
     @Column(nullable = false)

@@ -1,5 +1,7 @@
 package com.rental.controller;
 
+import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,5 +70,12 @@ public class LoginController
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
         return ResponseEntity.status(HttpStatus.CREATED).body("Registration Successful");
+    }
+    
+    @GetMapping("/api/checkauth")
+    public ResponseEntity<String> ping(Principal principal)
+    {
+        Principal p = principal;
+        return ResponseEntity.status(HttpStatus.OK).body("You are authenticated!");
     }
 }

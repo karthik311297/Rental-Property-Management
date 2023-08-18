@@ -20,12 +20,12 @@ import com.rental.model.identifier.OccupancyIdentifier;
 public class Occupancy
 {
     @Id
-    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "UserID")
     private UserInfo tenant;
     
     @Id
-    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "PropertyID")
     private Property property;
     

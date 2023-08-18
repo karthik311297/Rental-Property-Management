@@ -1,16 +1,25 @@
 package com.rental.repository;
 
-import java.util.Optional;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rental.model.AuthToken;
 import com.rental.model.UserInfo;
 
+@Repository
 public interface AuthTokenRepository extends JpaRepository<AuthToken,UUID>
 {
     boolean existsByUserInfo(UserInfo userInfo);
     
-    AuthToken findByUserInfo(UserInfo userInfo);
+    @Transactional
+    @Modifying
+    @Query("UPDATE AuthToken a SET a.expiryDate = :newExpiryDate WHERE a.id = :tokenID")
+    int updateTokenExpiryDate(@Param("newExpiryDate") LocalDateTime newExpiryDate, @Param("tokenID") UUID tokenID);
 }

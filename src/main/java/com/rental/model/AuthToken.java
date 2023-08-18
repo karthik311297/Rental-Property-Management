@@ -6,7 +6,6 @@ import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -19,13 +18,13 @@ public class AuthToken
 {
     @Id
     @GeneratedValue
-    @Column(nullable = false, name = "sessionID")
+    @Column(nullable = false, name = "sessionID", columnDefinition = "uuid")
     private UUID id;
     
     @Column(nullable = false)
     private LocalDateTime expiryDate;
     
-    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "UserID")
     private UserInfo userInfo;
     

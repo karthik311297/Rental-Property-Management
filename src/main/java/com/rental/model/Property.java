@@ -19,7 +19,7 @@ public class Property
 {
     @Id
     @GeneratedValue
-    @Column(name = "PropertyID")
+    @Column(name = "PropertyID", columnDefinition = "uuid")
     private UUID id;
     
     @Column(nullable = false)
@@ -33,7 +33,7 @@ public class Property
     
     private int rent;
     
-    @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "UserID")
     private UserInfo owner;
     
