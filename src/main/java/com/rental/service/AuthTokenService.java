@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rental.exception.AuthenticatedSessionAlreadyExistsException;
 import com.rental.model.AuthToken;
@@ -37,12 +38,13 @@ public class AuthTokenService
         }
     }
     
+    @Transactional
     public int updateTokenExpiryDate(LocalDateTime newExpiryDate, String tokenID)
     {
         return authTokenRepository.updateTokenExpiryDate(newExpiryDate, UUID.fromString(tokenID));
     }
     
-    public Optional<AuthToken> findByAuthTokenById(String tokenID)
+    public Optional<AuthToken> findAuthTokenById(String tokenID)
     {
         return authTokenRepository.findById(UUID.fromString(tokenID));
     }

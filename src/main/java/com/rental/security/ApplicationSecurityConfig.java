@@ -1,10 +1,6 @@
 package com.rental.security;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,9 +23,6 @@ public class ApplicationSecurityConfig
 {
     @Autowired
     public AuthTokenService authTokenService;
-    
-    @Value("${auth.token.expiry.minutes}")
-    private String authTokenExpiryTimeInMinutes;
     
     @Autowired
     public UserService userService;
@@ -56,8 +49,7 @@ public class ApplicationSecurityConfig
                 .authorizeRequests()
                 .anyRequest().permitAll()
                 .and()
-                .addFilter(new UserAuthenticationFilter(authTokenService,
-                        authTokenExpiryTimeInMinutes, authenticationManagerBean(http)))
+                .addFilter(new UserAuthenticationFilter(authTokenService, authenticationManagerBean(http)))
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().build();
     }

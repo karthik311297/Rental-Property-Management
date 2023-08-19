@@ -23,12 +23,10 @@ import com.rental.service.AuthTokenService;
 public class UserAuthenticationFilter extends BasicAuthenticationFilter
 {
     private AuthTokenService authTokenService;
-    private final String authTokenExpiryTimeInMinutes;
     
-    public UserAuthenticationFilter(AuthTokenService authTokenService, String authTokenExpiryTimeInMinutes, AuthenticationManager authenticationManager)
+    public UserAuthenticationFilter(AuthTokenService authTokenService, AuthenticationManager authenticationManager)
     {
         super(authenticationManager);
-        this.authTokenExpiryTimeInMinutes = authTokenExpiryTimeInMinutes;
         this.authTokenService = authTokenService;
     }
     
@@ -41,7 +39,7 @@ public class UserAuthenticationFilter extends BasicAuthenticationFilter
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
-        Optional<AuthToken> tokenOptional = authTokenService.findByAuthTokenById(authHeader.split(" ")[1]);
+        Optional<AuthToken> tokenOptional = authTokenService.findAuthTokenById(authHeader.split(" ")[1]);
         if(!tokenOptional.isPresent() || isTokenExpired(tokenOptional.get()))
         {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -57,10 +55,5 @@ public class UserAuthenticationFilter extends BasicAuthenticationFilter
     private boolean isTokenExpired(AuthToken authToken)
     {
         return LocalDateTime.now().isAfter(authToken.getExpiryDate());
-    }
-    
-    private int getAuthTokenExpiryTimeInMinutes()
-    {
-        return Integer.parseInt(authTokenExpiryTimeInMinutes);
     }
 }
