@@ -49,6 +49,12 @@ public class AuthTokenService
         return authTokenRepository.findById(UUID.fromString(tokenID));
     }
     
+    @Transactional
+    public void deleteAuthToken(AuthToken token)
+    {
+        authTokenRepository.delete(token);
+    }
+    
     private String getAuthenticatedUserToken(UserInfo userInfo) throws AuthenticatedSessionAlreadyExistsException
     {
         AuthToken token;

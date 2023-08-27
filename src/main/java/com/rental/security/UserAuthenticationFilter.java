@@ -40,8 +40,14 @@ public class UserAuthenticationFilter extends BasicAuthenticationFilter
             return;
         }
         Optional<AuthToken> tokenOptional = authTokenService.findAuthTokenById(authHeader.split(" ")[1]);
-        if(!tokenOptional.isPresent() || isTokenExpired(tokenOptional.get()))
+        if(!tokenOptional.isPresent())
         {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+        if(isTokenExpired(tokenOptional.get()))
+        {
+            authTokenService.deleteAuthToken(tokenOptional.get());
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return;
         }

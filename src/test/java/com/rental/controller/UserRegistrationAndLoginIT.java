@@ -18,6 +18,7 @@ import org.testng.annotations.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rental.dto.AuthTokenDto;
 import com.rental.model.ROLE;
 import com.rental.model.dto.LoginDto;
 import com.rental.model.dto.RegistrationDto;
@@ -25,7 +26,7 @@ import com.rental.service.AuthTokenService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class UserInfoRegistrationAndLoginIT extends AbstractTransactionalTestNGSpringContextTests
+public class UserRegistrationAndLoginIT extends AbstractTransactionalTestNGSpringContextTests
 {
     @Autowired
     private TestRestTemplate testRestTemplate;
@@ -104,6 +105,7 @@ public class UserInfoRegistrationAndLoginIT extends AbstractTransactionalTestNGS
         ResponseEntity<String> response = testRestTemplate.exchange("/api/checkauth", HttpMethod.GET, new HttpEntity<>(getAuthorizationHeader(tokenId)), String.class);
         
         Assert.assertEquals(response.getStatusCode(), HttpStatus.FORBIDDEN);
+        Assert.assertFalse(authTokenService.findAuthTokenById(tokenId).isPresent());
     }
     
     @Test
@@ -115,9 +117,14 @@ public class UserInfoRegistrationAndLoginIT extends AbstractTransactionalTestNGS
         Assert.assertEquals(response.getStatusCode(), HttpStatus.FORBIDDEN);
     }
     
-    private void expireAuthToken(String tokenId)
+    private int expireAuthToken(String tokenId) throws JsonProcessingException
     {
-        authTokenService.updateTokenExpiryDate(LocalDateTime.now().minusMinutes(4), tokenId);
+        AuthTokenDto authTokenDto = new AuthTokenDto(tokenId, LocalDateTime.now().minusMinutes(4));
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules();
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/test/updatetokenexpiry",
+                new HttpEntity<String>(objectMapper.writeValueAsString(authTokenDto), getHttpHeadersForJsonContentType()), String.class);
+        return response.getStatusCodeValue();
     }
     
     private void registerUser() throws JsonProcessingException
