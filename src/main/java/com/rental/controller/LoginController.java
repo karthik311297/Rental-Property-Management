@@ -76,6 +76,6 @@ public class LoginController
     public ResponseEntity<String> ping(Principal principal)
     {
         Principal p = principal;
-        return ResponseEntity.status(HttpStatus.OK).body("You are authenticated!");
+        return ResponseEntity.status(HttpStatus.OK).body("You are a valid authenticated user!");
     }
 }
