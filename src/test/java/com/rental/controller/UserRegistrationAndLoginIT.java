@@ -9,7 +9,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
@@ -23,6 +22,7 @@ import com.rental.model.ROLE;
 import com.rental.model.dto.LoginDto;
 import com.rental.model.dto.RegistrationDto;
 import com.rental.service.AuthTokenService;
+import com.rental.utils.TestUtils;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -41,7 +41,7 @@ public class UserRegistrationAndLoginIT extends AbstractTransactionalTestNGSprin
         LoginDto loginDto = new LoginDto("kiyer", "kPassword");
         
         ResponseEntity<String> loginResponse = testRestTemplate.postForEntity("/login",
-                new HttpEntity<String>(getLoginPostBody(loginDto), getHttpHeadersForJsonContentType()), String.class);
+                new HttpEntity<String>(TestUtils.getLoginPostBody(loginDto), TestUtils.getHttpHeadersForJsonContentType()), String.class);
         
         String tokenId = loginResponse.getBody();
         Assert.assertEquals(loginResponse.getStatusCode(), HttpStatus.OK);
@@ -52,28 +52,26 @@ public class UserRegistrationAndLoginIT extends AbstractTransactionalTestNGSprin
     public void shouldFailRegistrationWhenUsernameOrEmailIdAlreadyExists() throws JsonProcessingException
     {
         registerUser();
-        HttpHeaders headers = getHttpHeadersForJsonContentType();
+        HttpHeaders headers = TestUtils.getHttpHeadersForJsonContentType();
         RegistrationDto registrationDto = new RegistrationDto("Karthik", "karthik.gmail.com", "31 Dec 1997",
                 "909909", ROLE.OWNER, "kiyer", "kPassword");
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.findAndRegisterModules();
         
         ResponseEntity<String> regResponse =
                 testRestTemplate.postForEntity("/register",
-                        new HttpEntity<String>(getRegistrationPostBody(registrationDto, objectMapper), headers), String.class);
+                        new HttpEntity<String>(TestUtils.getRegistrationPostBody(registrationDto), headers), String.class);
         
         
         Assert.assertEquals(regResponse.getStatusCode(), HttpStatus.CONFLICT);
     }
     
     @Test
-    public void shouldFailLoginForRegisteredUserWhenCredentialsAreInvalid() throws JsonProcessingException
+    public void shouldFailLoginWhenCredentialsAreInvalid() throws JsonProcessingException
     {
         registerUser();
         LoginDto loginDto = new LoginDto("kiyer3", "kPassword");
         
         ResponseEntity<String> loginResponse = testRestTemplate.postForEntity("/login",
-                new HttpEntity<String>(getLoginPostBody(loginDto), getHttpHeadersForJsonContentType()), String.class);
+                new HttpEntity<String>(TestUtils.getLoginPostBody(loginDto), TestUtils.getHttpHeadersForJsonContentType()), String.class);
         
         Assert.assertEquals(loginResponse.getStatusCode(), HttpStatus.UNAUTHORIZED);
     }
@@ -84,10 +82,11 @@ public class UserRegistrationAndLoginIT extends AbstractTransactionalTestNGSprin
         registerUser();
         LoginDto loginDto = new LoginDto("kiyer", "kPassword");
         ResponseEntity<String> loginResponse = testRestTemplate.postForEntity("/login",
-                new HttpEntity<String>(getLoginPostBody(loginDto), getHttpHeadersForJsonContentType()), String.class);
+                new HttpEntity<String>(TestUtils.getLoginPostBody(loginDto), TestUtils.getHttpHeadersForJsonContentType()), String.class);
         String tokenId = loginResponse.getBody();
         
-        ResponseEntity<String> response = testRestTemplate.exchange("/api/checkauth", HttpMethod.GET, new HttpEntity<>(getAuthorizationHeader(tokenId)), String.class);
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/checkauth", HttpMethod.GET,
+                new HttpEntity<>(TestUtils.getAuthorizationHeader(tokenId)), String.class);
         
         Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
     }
@@ -98,11 +97,12 @@ public class UserRegistrationAndLoginIT extends AbstractTransactionalTestNGSprin
         registerUser();
         LoginDto loginDto = new LoginDto("kiyer", "kPassword");
         ResponseEntity<String> loginResponse = testRestTemplate.postForEntity("/login",
-                new HttpEntity<String>(getLoginPostBody(loginDto), getHttpHeadersForJsonContentType()), String.class);
+                new HttpEntity<String>(TestUtils.getLoginPostBody(loginDto), TestUtils.getHttpHeadersForJsonContentType()), String.class);
         String tokenId = loginResponse.getBody();
         expireAuthToken(tokenId);
         
-        ResponseEntity<String> response = testRestTemplate.exchange("/api/checkauth", HttpMethod.GET, new HttpEntity<>(getAuthorizationHeader(tokenId)), String.class);
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/checkauth", HttpMethod.GET,
+                new HttpEntity<>(TestUtils.getAuthorizationHeader(tokenId)), String.class);
         
         Assert.assertEquals(response.getStatusCode(), HttpStatus.FORBIDDEN);
         Assert.assertFalse(authTokenService.findAuthTokenById(tokenId).isPresent());
@@ -123,42 +123,17 @@ public class UserRegistrationAndLoginIT extends AbstractTransactionalTestNGSprin
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
         ResponseEntity<String> response = testRestTemplate.postForEntity("/test/updatetokenexpiry",
-                new HttpEntity<String>(objectMapper.writeValueAsString(authTokenDto), getHttpHeadersForJsonContentType()), String.class);
+                new HttpEntity<String>(objectMapper.writeValueAsString(authTokenDto), TestUtils.getHttpHeadersForJsonContentType()), String.class);
         return response.getStatusCodeValue();
     }
     
     private void registerUser() throws JsonProcessingException
     {
-        HttpHeaders headers = getHttpHeadersForJsonContentType();
+        HttpHeaders headers = TestUtils.getHttpHeadersForJsonContentType();
         RegistrationDto registrationDto = new RegistrationDto("Karthik", "karthik.gmail.com", "31 Dec 1997",
                 "909909", ROLE.OWNER, "kiyer", "kPassword");
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.findAndRegisterModules();
+        
         testRestTemplate.postForEntity("/register",
-                new HttpEntity<String>(getRegistrationPostBody(registrationDto, objectMapper), headers), String.class);
-    }
-    
-    private HttpHeaders getAuthorizationHeader(String token)
-    {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        return headers;
-    }
-    
-    private HttpHeaders getHttpHeadersForJsonContentType()
-    {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        return headers;
-    }
-    
-    private String getRegistrationPostBody(RegistrationDto registrationDto, ObjectMapper objectMapper) throws JsonProcessingException
-    {
-        return objectMapper.writeValueAsString(registrationDto);
-    }
-    
-    private String getLoginPostBody(LoginDto loginDto) throws JsonProcessingException
-    {
-        return new ObjectMapper().writeValueAsString(loginDto);
+                new HttpEntity<String>(TestUtils.getRegistrationPostBody(registrationDto), headers), String.class);
     }
 }
