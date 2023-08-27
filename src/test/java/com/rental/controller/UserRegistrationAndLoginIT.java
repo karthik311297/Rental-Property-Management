@@ -52,7 +52,7 @@ public class UserInfoRegistrationAndLoginIT extends AbstractTransactionalTestNGS
     {
         registerUser();
         HttpHeaders headers = getHttpHeadersForJsonContentType();
-        RegistrationDto registrationDto = new RegistrationDto("Karthik", "karthik.gmail.com", LocalDateTime.now(),
+        RegistrationDto registrationDto = new RegistrationDto("Karthik", "karthik.gmail.com", "31 Dec 1997",
                 "909909", ROLE.OWNER, "kiyer", "kPassword");
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
@@ -123,7 +123,7 @@ public class UserInfoRegistrationAndLoginIT extends AbstractTransactionalTestNGS
     private void registerUser() throws JsonProcessingException
     {
         HttpHeaders headers = getHttpHeadersForJsonContentType();
-        RegistrationDto registrationDto = new RegistrationDto("Karthik", "karthik.gmail.com", LocalDateTime.now(),
+        RegistrationDto registrationDto = new RegistrationDto("Karthik", "karthik.gmail.com", "31 Dec 1997",
                 "909909", ROLE.OWNER, "kiyer", "kPassword");
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
