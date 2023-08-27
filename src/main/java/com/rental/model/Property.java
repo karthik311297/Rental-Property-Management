@@ -31,9 +31,10 @@ public class Property
     @Column(nullable = false)
     private String city;
     
+    @Column(nullable = false)
     private int rent;
     
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "UserID")
     private UserInfo owner;
     

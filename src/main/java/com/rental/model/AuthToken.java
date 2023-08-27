@@ -24,7 +24,7 @@ public class AuthToken
     @Column(nullable = false)
     private LocalDateTime expiryDate;
     
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "UserID")
     private UserInfo userInfo;
     

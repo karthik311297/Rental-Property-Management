@@ -26,7 +26,7 @@ public class UserInfo
     private String emailId;
     
     @Column(nullable = false)
-    private LocalDateTime dateOfBirth;
+    private String dateOfBirth;
     
     @Column(nullable = false, length = 13)
     private String phoneNumber;
@@ -45,7 +45,7 @@ public class UserInfo
     
     }
     
-    public UserInfo(String name, String emailId, LocalDateTime dateOfBirth, String phoneNumber, ROLE role, String userName, String password)
+    public UserInfo(String name, String emailId, String dateOfBirth, String phoneNumber, ROLE role, String userName, String password)
     {
         this.name = name;
         this.emailId = emailId;
@@ -86,12 +86,12 @@ public class UserInfo
         this.emailId = emailId;
     }
     
-    public LocalDateTime getDateOfBirth()
+    public String getDateOfBirth()
     {
         return dateOfBirth;
     }
     
-    public void setDateOfBirth(LocalDateTime dateOfBirth)
+    public void setDateOfBirth(String dateOfBirth)
     {
         this.dateOfBirth = dateOfBirth;
     }

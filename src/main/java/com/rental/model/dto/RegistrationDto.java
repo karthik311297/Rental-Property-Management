@@ -12,7 +12,7 @@ public class RegistrationDto
     
     private String emailId;
     
-    private LocalDateTime dateOfBirth;
+    private String dateOfBirth;
     
     private String phoneNumber;
     
@@ -27,7 +27,7 @@ public class RegistrationDto
     
     }
     
-    public RegistrationDto(String name, String emailId, LocalDateTime dateOfBirth, String phoneNumber, ROLE role, String userName, String password)
+    public RegistrationDto(String name, String emailId, String dateOfBirth, String phoneNumber, ROLE role, String userName, String password)
     {
         this.name = name;
         this.emailId = emailId;
@@ -58,12 +58,12 @@ public class RegistrationDto
         this.emailId = emailId;
     }
     
-    public LocalDateTime getDateOfBirth()
+    public String getDateOfBirth()
     {
         return dateOfBirth;
     }
     
-    public void setDateOfBirth(LocalDateTime dateOfBirth)
+    public void setDateOfBirth(String dateOfBirth)
     {
         this.dateOfBirth = dateOfBirth;
     }
